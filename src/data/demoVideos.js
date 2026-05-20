@@ -1,0 +1,80 @@
+export const demoVideos = [
+  {
+    id: 'demo-1',
+    title: 'Featured preview with cinematic lighting',
+    thumbnail: '',
+    views: '128K',
+    duration: '12:48',
+    category: 'Trending',
+    tags: ['featured', 'preview'],
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    directLink: 'https://example.com',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 12
+  },
+  {
+    id: 'demo-2',
+    title: 'New collection teaser updated today',
+    thumbnail: '',
+    views: '94K',
+    duration: '08:25',
+    category: 'Latest',
+    tags: ['new', 'collection'],
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    directLink: 'https://example.com',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 65
+  },
+  {
+    id: 'demo-3',
+    title: 'Popular short preview for mobile traffic',
+    thumbnail: '',
+    views: '210K',
+    duration: '05:32',
+    category: 'Popular',
+    tags: ['mobile', 'popular'],
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    directLink: 'https://example.com',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 120
+  },
+  {
+    id: 'demo-4',
+    title: 'Premium featured landing page example',
+    thumbnail: '',
+    views: '61K',
+    duration: '14:10',
+    category: 'Featured',
+    tags: ['premium', 'featured'],
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    directLink: 'https://example.com',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 250
+  },
+  {
+    id: 'demo-5',
+    title: 'Fast loading responsive preview card',
+    thumbnail: '',
+    views: '75K',
+    duration: '07:44',
+    category: 'Trending',
+    tags: ['responsive', 'fast'],
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    directLink: 'https://example.com',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 390
+  },
+  {
+    id: 'demo-6',
+    title: 'Clean grid layout sample video',
+    thumbnail: '',
+    views: '43K',
+    duration: '09:11',
+    category: 'Latest',
+    tags: ['grid', 'clean'],
+    embedUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+    directLink: 'https://example.com',
+    status: 'active',
+    createdAt: Date.now() - 1000 * 60 * 480
+  }
+];
