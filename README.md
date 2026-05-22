@@ -5,7 +5,25 @@ This is a single React/Vite website that contains both:
 - Public user website
 - Private admin panel
 
-The admin panel controls videos, branding, categories, age confirmation, demo videos, ad slots, popunder script URL, social bar script URL, and direct-link buttons.
+The admin panel controls videos, branding, the home hero section, category visibility, age confirmation, demo videos, global ads, individual ad placements, popunder/social-bar script toggles, and direct-link buttons.
+
+---
+
+## Latest UI controls added
+
+Inside **Admin → Settings** you can now turn the home hero section on/off and enable or disable the public category feature.
+
+Inside **Admin → Ads** you can use a master ads switch and also turn each placement on/off individually:
+
+- Top banner
+- In-feed banner
+- Watch page banner
+- Native/sidebar banner
+- Popunder script
+- Social bar script
+- Direct-link buttons
+
+The public video cards now show views and duration directly on the thumbnail, and the watch-page helper text has been removed.
 
 ---
 

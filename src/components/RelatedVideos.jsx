@@ -1,9 +1,10 @@
 import VideoCard from './VideoCard';
 
-export default function RelatedVideos({ currentVideo, videos }) {
+export default function RelatedVideos({ currentVideo, videos, settings }) {
+  const categoriesEnabled = settings?.ui?.categoriesEnabled !== false;
   const related = videos
     .filter((video) => video.id !== currentVideo.id)
-    .filter((video) => video.category === currentVideo.category || videos.length < 5)
+    .filter((video) => !categoriesEnabled || video.category === currentVideo.category || videos.length < 5)
     .slice(0, 8);
 
   if (!related.length) return null;
@@ -19,7 +20,7 @@ export default function RelatedVideos({ currentVideo, videos }) {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
         {related.map((video) => (
-          <VideoCard key={video.id} video={video} />
+          <VideoCard key={video.id} video={video} showCategory={categoriesEnabled} />
         ))}
       </div>
     </section>

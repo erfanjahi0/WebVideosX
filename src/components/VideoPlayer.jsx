@@ -1,7 +1,9 @@
-import { ExternalLink, Play, ShieldCheck } from 'lucide-react';
+import { ExternalLink, Play } from 'lucide-react';
 import { safeExternalOpen } from '../utils/format';
 
 export default function VideoPlayer({ video, settings }) {
+  const categoriesEnabled = settings.ui?.categoriesEnabled !== false;
+
   const activeButtons = [
     ...(settings.ads.directButtons || []).filter((button) => button.enabled && button.url),
     video.directLink ? { label: 'Open Video Link', url: video.directLink, enabled: true } : null
@@ -31,17 +33,12 @@ export default function VideoPlayer({ video, settings }) {
 
       <div className="relative p-5 sm:p-6">
         <div className="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-[0.18em] text-rose-200">
-          <span className="status-pill border-rose-300/20 bg-rose-500/10 text-rose-100">{video.category}</span>
+          {categoriesEnabled && <span className="status-pill border-rose-300/20 bg-rose-500/10 text-rose-100">{video.category}</span>}
           <span className="status-pill">{video.duration}</span>
           <span className="status-pill">{video.views} views</span>
         </div>
 
         <h1 className="mt-4 text-2xl font-black leading-tight text-white md:text-4xl">{video.title}</h1>
-
-        <div className="mt-4 flex items-start gap-2 rounded-2xl border border-white/10 bg-black/20 p-3 text-sm text-zinc-400">
-          <ShieldCheck size={18} className="mt-0.5 shrink-0 text-rose-200" />
-          <p>Use the official embed/direct links provided by the content host. External buttons open in a new tab.</p>
-        </div>
 
         {activeButtons.length > 0 && (
           <div className="mt-5 flex flex-wrap gap-3">

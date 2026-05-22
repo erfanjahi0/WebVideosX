@@ -15,9 +15,9 @@ export function GlobalAdScripts({ settings }) {
 
   useEffect(() => {
     if (!ads?.enabled) return;
-    injectScript(ads.popunderScriptUrl, 'global-popunder-script');
-    injectScript(ads.socialBarScriptUrl, 'global-socialbar-script');
-  }, [ads?.enabled, ads?.popunderScriptUrl, ads?.socialBarScriptUrl]);
+    if (ads.popunderEnabled !== false) injectScript(ads.popunderScriptUrl, 'global-popunder-script');
+    if (ads.socialBarEnabled !== false) injectScript(ads.socialBarScriptUrl, 'global-socialbar-script');
+  }, [ads?.enabled, ads?.popunderEnabled, ads?.popunderScriptUrl, ads?.socialBarEnabled, ads?.socialBarScriptUrl]);
 
   return null;
 }

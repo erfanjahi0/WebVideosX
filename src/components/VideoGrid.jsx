@@ -3,6 +3,7 @@ import VideoCard from './VideoCard';
 
 export default function VideoGrid({ videos, settings }) {
   const itemsPerAdBreak = Number(settings.ui.itemsPerAdBreak || 8);
+  const showCategory = settings.ui.categoriesEnabled !== false;
 
   if (!videos.length) {
     return (
@@ -18,9 +19,9 @@ export default function VideoGrid({ videos, settings }) {
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:gap-5 xl:grid-cols-4">
       {videos.map((video, index) => (
         <div key={video.id} className="contents">
-          <VideoCard video={video} />
+          <VideoCard video={video} showCategory={showCategory} />
 
-          {settings.ads.enabled && settings.ads.inFeedBannerHtml && (index + 1) % itemsPerAdBreak === 0 && (
+          {settings.ads.enabled && settings.ads.inFeedBannerEnabled !== false && settings.ads.inFeedBannerHtml && (index + 1) % itemsPerAdBreak === 0 && (
             <div className="sm:col-span-2 xl:col-span-4">
               <AdSlot html={settings.ads.inFeedBannerHtml} label="In-feed advertisement" />
             </div>

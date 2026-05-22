@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Clock, Eye, Play, Sparkles } from 'lucide-react';
 import { buildGradientFromText } from '../utils/format';
 
-export default function VideoCard({ video }) {
+export default function VideoCard({ video, showCategory = true }) {
   const gradient = buildGradientFromText(video.title);
 
   return (
@@ -27,14 +27,21 @@ export default function VideoCard({ video }) {
           </div>
         )}
 
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
 
-        <div className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-white shadow-soft backdrop-blur-md ring-1 ring-white/15">
-          <Sparkles size={13} /> {video.category}
-        </div>
+        {showCategory && (
+          <div className="absolute left-3 top-3 inline-flex max-w-[calc(100%-1.5rem)] items-center gap-1.5 rounded-full bg-black/55 px-3 py-1.5 text-[11px] font-black uppercase tracking-wide text-white shadow-soft backdrop-blur-md ring-1 ring-white/15">
+            <Sparkles size={13} /> <span className="truncate">{video.category}</span>
+          </div>
+        )}
 
-        <div className="absolute bottom-3 right-3 rounded-full bg-black/65 px-3 py-1.5 text-xs font-black text-white backdrop-blur-md ring-1 ring-white/15">
-          {video.duration}
+        <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between gap-2 text-xs font-black text-white">
+          <span className="inline-flex min-w-0 items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 backdrop-blur-md ring-1 ring-white/15">
+            <Eye size={14} /> <span className="truncate">{video.views}</span>
+          </span>
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-black/65 px-3 py-1.5 backdrop-blur-md ring-1 ring-white/15">
+            <Clock size={14} /> {video.duration}
+          </span>
         </div>
 
         <div className="absolute inset-0 flex items-center justify-center opacity-0 transition duration-300 group-hover:opacity-100">
@@ -45,16 +52,7 @@ export default function VideoCard({ video }) {
       </div>
 
       <div className="relative p-4 sm:p-5">
-        <h3 className="line-clamp-2 min-h-12 text-base font-black leading-snug text-white sm:text-[17px]">{video.title}</h3>
-
-        <div className="mt-4 flex items-center justify-between gap-3 text-xs font-bold text-zinc-500">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.045] px-3 py-1.5">
-            <Eye size={15} /> {video.views}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/[0.045] px-3 py-1.5">
-            <Clock size={15} /> {video.duration}
-          </span>
-        </div>
+        <h3 className="line-clamp-2 text-base font-black leading-snug text-white sm:text-[17px]">{video.title}</h3>
       </div>
     </Link>
   );

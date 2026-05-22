@@ -33,6 +33,7 @@ export default function Header({ settings, query, setQuery, category, setCategor
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const categories = settings.ui.categories || ['All'];
+  const showCategories = settings.ui.categoriesEnabled !== false;
 
   useEffect(() => {
     setOpen(false);
@@ -73,9 +74,11 @@ export default function Header({ settings, query, setQuery, category, setCategor
           <div className="min-w-[280px] flex-1">
             <SearchBox />
           </div>
-          <div className="max-w-[460px]">
-            <CategoryChips categories={categories} category={category} setCategory={setCategory} />
-          </div>
+          {showCategories && (
+            <div className="max-w-[460px]">
+              <CategoryChips categories={categories} category={category} setCategory={setCategory} />
+            </div>
+          )}
         </div>
 
         <Link
@@ -98,7 +101,7 @@ export default function Header({ settings, query, setQuery, category, setCategor
         <div className="border-t border-white/10 px-3 pb-4 pt-3 sm:px-4 lg:hidden">
           <div className="mx-auto max-w-7xl space-y-3">
             <SearchBox compact />
-            <CategoryChips categories={categories} category={category} setCategory={setCategory} onPick={() => setOpen(false)} />
+            {showCategories && <CategoryChips categories={categories} category={category} setCategory={setCategory} onPick={() => setOpen(false)} />}
             <Link
               to="/legal"
               className="flex items-center justify-between rounded-2xl border border-white/10 bg-white/[0.055] px-4 py-3 text-sm font-black text-zinc-200"

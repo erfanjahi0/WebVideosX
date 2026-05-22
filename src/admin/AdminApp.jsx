@@ -298,7 +298,7 @@ function DashboardPage({ videos, settings, adminPath }) {
         </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid min-w-0 gap-4 lg:grid-cols-3">
         <StatCard label="Total videos" value={videos.length} icon={PlaySquare} tone="sky" />
         <StatCard label="Active videos" value={active} icon={Eye} tone="emerald" />
         <StatCard label="Hidden videos" value={hidden} icon={EyeOff} tone="rose" />
@@ -313,6 +313,8 @@ function DashboardPage({ videos, settings, adminPath }) {
                 ['Website name', settings.brand.name],
                 ['Age gate', settings.legal.showAgeGate ? 'On' : 'Off'],
                 ['Ads', settings.ads.enabled ? 'On' : 'Off'],
+                ['Home hero', settings.ui.showHomeHero !== false ? 'On' : 'Off'],
+                ['Categories', settings.ui.categoriesEnabled !== false ? 'On' : 'Off'],
                 ['Demo videos', settings.ui.showDemoDataWhenFirebaseEmpty ? 'On' : 'Off']
               ].map(([label, value]) => (
                 <div key={label} className="rounded-2xl border border-white/10 bg-black/20 p-4">
@@ -377,7 +379,7 @@ function VideoForm({ value, setValue, settings, onSave, onCancel, busy }) {
   };
 
   return (
-    <form onSubmit={onSave} className="admin-card space-y-5">
+    <form onSubmit={onSave} className="admin-card space-y-5 overflow-hidden">
       <div className="relative flex items-center justify-between gap-3">
         <div>
           <h2 className="text-xl font-black text-white">{value.id ? 'Edit video' : 'Add video'}</h2>
@@ -390,14 +392,14 @@ function VideoForm({ value, setValue, settings, onSave, onCancel, busy }) {
         )}
       </div>
 
-      <div className="relative grid gap-4 lg:grid-cols-[1fr_320px]">
-        <div className="space-y-4">
+      <div className="relative grid min-w-0 gap-4 xl:grid-cols-[minmax(0,1fr)_minmax(280px,320px)]">
+        <div className="min-w-0 space-y-4">
           <div>
             <label className="admin-label">Title</label>
             <input className="admin-field" value={value.title} onChange={(event) => setField('title', event.target.value)} required placeholder="Video title" />
           </div>
 
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid min-w-0 gap-4 md:grid-cols-2">
             <div>
               <label className="admin-label">Thumbnail URL</label>
               <div className="relative">
@@ -414,7 +416,7 @@ function VideoForm({ value, setValue, settings, onSave, onCancel, busy }) {
             </div>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid min-w-0 gap-4 lg:grid-cols-3">
             <div>
               <label className="admin-label">Views</label>
               <input className="admin-field" value={value.views} onChange={(event) => setField('views', event.target.value)} placeholder="25K" />
@@ -444,7 +446,7 @@ function VideoForm({ value, setValue, settings, onSave, onCancel, busy }) {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <div>
             <label className="admin-label">Category</label>
             <ChoiceRail items={categories.length ? categories : ['Latest']} value={value.category} onChange={(next) => setField('category', next)} />
@@ -705,6 +707,8 @@ function SettingsPage({ settings, setSettings, saveSettings, adminPath, busy }) 
           <h2 className="text-xl font-black text-white">Website behavior</h2>
           <div className="mt-4 space-y-3">
             <Toggle checked={settings.legal.showAgeGate} onChange={(value) => setNested('legal', 'showAgeGate', value)} label="Age confirmation" help="Turn the age confirmation popup on or off." />
+            <Toggle checked={settings.ui.showHomeHero !== false} onChange={(value) => setNested('ui', 'showHomeHero', value)} label="Home hero section" help="Show or hide the top section that says Smooth previews for every screen." />
+            <Toggle checked={settings.ui.categoriesEnabled !== false} onChange={(value) => setNested('ui', 'categoriesEnabled', value)} label="Categories feature" help="Turn public category chips, category filtering, and category labels on or off." />
             <Toggle checked={settings.ui.showDemoDataWhenFirebaseEmpty} onChange={(value) => setNested('ui', 'showDemoDataWhenFirebaseEmpty', value)} label="Demo videos" help="Show demo cards only when Firebase has no active videos. Turn off when your real videos are ready." />
           </div>
 
@@ -719,14 +723,14 @@ function SettingsPage({ settings, setSettings, saveSettings, adminPath, busy }) 
             </div>
           </div>
 
-          <div className="mt-4">
+          <div className={`mt-4 ${settings.ui.categoriesEnabled === false ? 'opacity-60' : ''}`}>
             <label className="admin-label">Categories, comma separated</label>
             <input
               className="admin-field"
               value={(settings.ui.categories || []).join(', ')}
               onChange={(event) => setNested('ui', 'categories', event.target.value.split(',').map((item) => item.trim()).filter(Boolean))}
             />
-            <p className="mt-2 text-xs text-zinc-500">Keep “All” as the first category.</p>
+            <p className="mt-2 text-xs text-zinc-500">Keep “All” as the first category. When categories are off, these are saved but hidden from visitors.</p>
           </div>
 
           <div className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-4 text-sm text-zinc-400">
@@ -776,44 +780,36 @@ function AdsPage({ settings, setSettings, saveSettings, busy }) {
     }));
   };
 
+  const scriptSlots = [
+    ['popunderEnabled', 'popunderScriptUrl', 'Popunder script'],
+    ['socialBarEnabled', 'socialBarScriptUrl', 'Social bar script']
+  ];
+
+  const htmlSlots = [
+    ['topBannerEnabled', 'topBannerHtml', 'Top banner'],
+    ['inFeedBannerEnabled', 'inFeedBannerHtml', 'In-feed banner'],
+    ['watchPageBannerEnabled', 'watchPageBannerHtml', 'Watch page banner'],
+    ['nativeBannerEnabled', 'nativeBannerHtml', 'Native/sidebar banner']
+  ];
+
   return (
     <div className="space-y-5">
       <div className="premium-card rounded-[2.25rem] p-6 sm:p-8">
         <div className="relative">
-          <PageTitle eyebrow="Monetization" title="Ads setup" description="Control global scripts, HTML placements, and direct-link buttons without changing code." />
+          <PageTitle eyebrow="Monetization" title="Ads setup" description="Control the master ad switch, each individual placement, global scripts, and direct-link buttons." />
         </div>
       </div>
 
       <div className="admin-card space-y-4">
         <div className="relative space-y-4">
-          <Toggle checked={settings.ads.enabled} onChange={(value) => setAds('enabled', value)} label="Enable ads" help="Turn this off to hide all ad slots and global ad scripts." />
+          <Toggle checked={settings.ads.enabled} onChange={(value) => setAds('enabled', value)} label="Master ads switch" help="Turn this off to hide every ad placement and global ad script immediately." />
 
-          <div className="grid gap-4 md:grid-cols-2">
-            <div>
-              <label className="admin-label">Popunder script URL</label>
-              <input className="admin-field" value={settings.ads.popunderScriptUrl} onChange={(event) => setAds('popunderScriptUrl', event.target.value)} placeholder="https://...js" />
-            </div>
-            <div>
-              <label className="admin-label">Social bar script URL</label>
-              <input className="admin-field" value={settings.ads.socialBarScriptUrl} onChange={(event) => setAds('socialBarScriptUrl', event.target.value)} placeholder="https://...js" />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="admin-card space-y-4">
-        <div className="relative">
-          <h2 className="text-xl font-black text-white">Ad HTML slots</h2>
-          <div className="mt-4 grid gap-4">
-            {[
-              ['topBannerHtml', 'Top banner HTML'],
-              ['inFeedBannerHtml', 'In-feed banner HTML'],
-              ['watchPageBannerHtml', 'Watch page banner HTML'],
-              ['nativeBannerHtml', 'Native/sidebar banner HTML']
-            ].map(([field, label]) => (
-              <div key={field}>
-                <label className="admin-label">{label}</label>
-                <textarea className="admin-field custom-scroll min-h-28" value={settings.ads[field] || ''} onChange={(event) => setAds(field, event.target.value)} placeholder="Paste ad network HTML code here" />
+          <div className="grid min-w-0 gap-4 md:grid-cols-2">
+            {scriptSlots.map(([enabledField, urlField, label]) => (
+              <div key={urlField} className="min-w-0 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <Toggle checked={settings.ads[enabledField] !== false} onChange={(value) => setAds(enabledField, value)} label={`${label} ${settings.ads[enabledField] !== false ? 'on' : 'off'}`} help="This script obeys the master ads switch too." />
+                <label className="admin-label mt-4">{label} URL</label>
+                <input className="admin-field" value={settings.ads[urlField] || ''} onChange={(event) => setAds(urlField, event.target.value)} placeholder="https://...js" />
               </div>
             ))}
           </div>
@@ -822,10 +818,26 @@ function AdsPage({ settings, setSettings, saveSettings, busy }) {
 
       <div className="admin-card space-y-4">
         <div className="relative">
-          <div className="flex items-center justify-between gap-3">
+          <h2 className="text-xl font-black text-white">Ad HTML slots</h2>
+          <p className="mt-1 text-sm text-zinc-500">Each placement has its own on/off switch, so you can disable one ad without removing the code.</p>
+          <div className="mt-4 grid gap-4">
+            {htmlSlots.map(([enabledField, htmlField, label]) => (
+              <div key={htmlField} className="min-w-0 rounded-2xl border border-white/10 bg-black/20 p-4">
+                <Toggle checked={settings.ads[enabledField] !== false} onChange={(value) => setAds(enabledField, value)} label={`${label} ${settings.ads[enabledField] !== false ? 'on' : 'off'}`} help="This slot also respects the master ads switch." />
+                <label className="admin-label mt-4">{label} HTML</label>
+                <textarea className="admin-field custom-scroll min-h-28" value={settings.ads[htmlField] || ''} onChange={(event) => setAds(htmlField, event.target.value)} placeholder="Paste ad network HTML code here" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="admin-card space-y-4">
+        <div className="relative">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-xl font-black text-white">Direct-link buttons</h2>
-              <p className="mt-1 text-sm text-zinc-500">Buttons shown below the video player.</p>
+              <p className="mt-1 text-sm text-zinc-500">Buttons shown below the video player. Each one can be turned on/off individually.</p>
             </div>
             <AdminButton onClick={addButton} className="border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08] hover:text-white"><Plus size={16} /> Add</AdminButton>
           </div>
@@ -833,16 +845,16 @@ function AdsPage({ settings, setSettings, saveSettings, busy }) {
           <div className="mt-4 space-y-3">
             {(settings.ads.directButtons || []).map((button, index) => (
               <div key={index} className="rounded-2xl border border-white/10 bg-black/20 p-4">
-                <div className="grid gap-4 md:grid-cols-[1fr_2fr_auto] md:items-end">
-                  <div>
+                <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_auto] lg:items-end">
+                  <div className="min-w-0">
                     <label className="admin-label">Label</label>
                     <input className="admin-field" value={button.label} onChange={(event) => updateButton(index, 'label', event.target.value)} />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <label className="admin-label">URL</label>
                     <input className="admin-field" value={button.url} onChange={(event) => updateButton(index, 'url', event.target.value)} placeholder="https://..." />
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <AdminButton onClick={() => updateButton(index, 'enabled', !button.enabled)} className={button.enabled ? 'bg-rose-500 text-white shadow-glow' : 'border border-white/10 bg-white/[0.04] text-zinc-300 hover:bg-white/[0.08] hover:text-white'}>{button.enabled ? 'On' : 'Off'}</AdminButton>
                     <AdminButton onClick={() => removeButton(index)} className="border border-red-400/20 bg-red-500/10 text-red-200 hover:bg-red-500/20"><Trash2 size={16} /></AdminButton>
                   </div>

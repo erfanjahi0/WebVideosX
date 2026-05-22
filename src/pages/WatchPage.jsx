@@ -18,6 +18,7 @@ function DetailRow({ icon: Icon, label, value }) {
 
 export default function WatchPage({ videos, settings }) {
   const { id } = useParams();
+  const categoriesEnabled = settings.ui.categoriesEnabled !== false;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -52,7 +53,7 @@ export default function WatchPage({ videos, settings }) {
         <div>
           <VideoPlayer video={video} settings={settings} />
 
-          {settings.ads.enabled && (
+          {settings.ads.enabled && settings.ads.watchPageBannerEnabled !== false && (
             <div className="mt-6">
               <AdSlot html={settings.ads.watchPageBannerHtml} label="Watch page advertisement" />
             </div>
@@ -60,13 +61,13 @@ export default function WatchPage({ videos, settings }) {
         </div>
 
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
-          {settings.ads.enabled && <AdSlot html={settings.ads.nativeBannerHtml} label="Native advertisement" compact />}
+          {settings.ads.enabled && settings.ads.nativeBannerEnabled !== false && <AdSlot html={settings.ads.nativeBannerHtml} label="Native advertisement" compact />}
 
           <div className="premium-card rounded-[2rem] p-5">
             <h2 className="text-xl font-black text-white">Video details</h2>
 
             <div className="mt-5 grid gap-3">
-              <DetailRow icon={Layers3} label="Category" value={video.category} />
+              {categoriesEnabled && <DetailRow icon={Layers3} label="Category" value={video.category} />}
               <DetailRow icon={Eye} label="Views" value={video.views} />
               <DetailRow icon={Clock} label="Duration" value={video.duration} />
             </div>
@@ -84,7 +85,7 @@ export default function WatchPage({ videos, settings }) {
         </aside>
       </div>
 
-      <RelatedVideos currentVideo={video} videos={videos} />
+      <RelatedVideos currentVideo={video} videos={videos} settings={settings} />
     </main>
   );
 }

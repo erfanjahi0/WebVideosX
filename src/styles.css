@@ -231,3 +231,36 @@ select.admin-field {
     transition-duration: 0.001ms !important;
   }
 }
+
+input,
+textarea,
+select {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.premium-card,
+.admin-card {
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .admin-card {
+    border-radius: 1.35rem;
+    padding: 1rem;
+  }
+
+  .admin-field {
+    border-radius: 1rem;
+    padding: 0.8rem 0.9rem;
+    font-size: 0.875rem;
+  }
+
+  .admin-field.pl-11 {
+    padding-left: 2.6rem;
+  }
+
+  .status-pill {
+    letter-spacing: 0.08em;
+  }
+}

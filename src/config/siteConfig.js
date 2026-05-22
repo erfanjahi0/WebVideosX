@@ -23,6 +23,8 @@ export const siteConfig = {
     defaultCategory: 'All',
     categories: ['All', 'Trending', 'Latest', 'Popular', 'Featured'],
     itemsPerAdBreak: 8,
+    showHomeHero: true,
+    categoriesEnabled: true,
     showDemoDataWhenFirebaseEmpty: true
   },
 
@@ -34,6 +36,12 @@ export const siteConfig = {
 
   ads: {
     enabled: false,
+    topBannerEnabled: true,
+    inFeedBannerEnabled: true,
+    watchPageBannerEnabled: true,
+    nativeBannerEnabled: true,
+    popunderEnabled: true,
+    socialBarEnabled: true,
     topBannerHtml: '',
     inFeedBannerHtml: '',
     watchPageBannerHtml: '',

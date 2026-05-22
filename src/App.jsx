@@ -108,16 +108,21 @@ export default function App() {
   }, [settings.brand?.name]);
 
   useEffect(() => {
+    if (!settings.ui.categoriesEnabled) {
+      setCategory(settings.ui.defaultCategory || 'All');
+      return;
+    }
+
     if (!settings.ui.categories.includes(category)) {
       setCategory(settings.ui.defaultCategory || 'All');
     }
-  }, [settings.ui.categories, settings.ui.defaultCategory, category]);
+  }, [settings.ui.categories, settings.ui.defaultCategory, settings.ui.categoriesEnabled, category]);
 
   const filteredVideos = useMemo(() => {
     const normalizedQuery = queryText.trim().toLowerCase();
 
     return videos.filter((video) => {
-      const matchesCategory = category === 'All' || video.category === category;
+      const matchesCategory = !settings.ui.categoriesEnabled || category === 'All' || video.category === category;
       const matchesQuery =
         !normalizedQuery ||
         [video.title, video.category, ...video.tags]
@@ -127,7 +132,7 @@ export default function App() {
 
       return matchesCategory && matchesQuery;
     });
-  }, [videos, category, queryText]);
+  }, [videos, category, queryText, settings.ui.categoriesEnabled]);
 
   if (adminMode) {
     return (
